@@ -1,6 +1,9 @@
 #include <iostream>
 #include<conio.h>
 using namespace std;
+float a[4][4];
+float b[4][4];
+float c[4][4];	
 float pSuma(float numA, float numB) {
 	float resultado = 0;
 	_asm {
@@ -31,7 +34,7 @@ float pMultiplicacion(float numA, float numB) {
 	}
 	return resultado;
 }
-float pDivision() {
+float pDivision(float numA, float numB) {
 	float resultado = 0;
 	_asm {
 		FLD DWORD PTR[numA]
@@ -57,11 +60,44 @@ float ejemploArr() {
 	}
 	return result;
 }
-
-
+void imprimirMatriz(float matriz[4][4]) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			cout << "|" << matriz[i][j] << "|";
+		}
+		cout << endl;
+	}
+}
+float obtenerDato(int i, int j) {
+	float numero = 0;
+	cout << "Ingrese el dato " << i << " , " << j << endl;
+	cin >> numero;
+	return numero;
+	
+}
+void iniciarMatriz(char letra, float matriz[4][4]) {
+	cout << "Matriz " << letra << ":" << endl;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			matriz[i][j] = obtenerDato(i, j);
+		}
+	}
+}
+void imprimirMenu() {
+	cout << "Ingrese la operacion a ejecutar entre la matriz a y la matriz b" << endl;
+	cout << "Luego de eso se va a imprimir el resultado, excepto para la opcion salida" << endl;
+	cout << "1. Suma" << endl;
+	cout << "2. Resta" << endl;
+	cout << "3. Multiplicacion" << endl;
+	//TODO
+}
 int main() {
+	iniciarMatriz('a', a);
+	iniciarMatriz('b', b);
+	imprimirMatriz(a);
+	imprimirMatriz(b);
 	//cout  << endl<< "Suma de 1 y 2" << suma(1, 2) << endl;
-	cout << pMultiplicacion(4.3,8) << endl;
+	cout << pDivision(4.3,8) << endl;
 	_getch();
 	return 0;
 }
