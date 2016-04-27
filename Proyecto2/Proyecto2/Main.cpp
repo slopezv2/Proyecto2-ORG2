@@ -1,15 +1,45 @@
 #include <iostream>
 #include<conio.h>
 using namespace std;
-float suma(float num1, float num2) {
-	float result=0;
+float pSuma(float numA, float numB) {
+	float resultado = 0;
 	_asm {
-		FLD DWORD PTR[num1] 
-		FLD DWORD PTR[num2]
+		FLD DWORD PTR[numA] 
+		FLD DWORD PTR[numB]
 		FADD
-		FSTP DWORD PTR[result] 
+		FSTP DWORD PTR[resultado] 
 	}
-	return result;
+	return resultado;
+}
+float pResta(float numA, float numB) {
+	float resultado = 0;
+	_asm {
+		FLD DWORD PTR[numA]
+		FLD DWORD PTR[numB]
+		FSUB
+		FSTP DWORD PTR[resultado]
+	}
+	return resultado;
+}
+float pMultiplicacion(float numA, float numB) {
+	float resultado = 0;
+	_asm {
+		FLD DWORD PTR[numA]
+		FLD DWORD PTR[numB]
+		FMUL
+		FSTP DWORD PTR[resultado]
+	}
+	return resultado;
+}
+float pDivision() {
+	float resultado = 0;
+	_asm {
+		FLD DWORD PTR[numA]
+		FLD DWORD PTR[numB]
+		FDIV
+		FSTP DWORD PTR[resultado]
+	}
+	return resultado;
 }
 float ejemploArr() {
 	float arr[3][3];
@@ -31,7 +61,7 @@ float ejemploArr() {
 
 int main() {
 	//cout  << endl<< "Suma de 1 y 2" << suma(1, 2) << endl;
-	cout << ejemploArr() << endl;
+	cout << pMultiplicacion(4.3,8) << endl;
 	_getch();
 	return 0;
 }
