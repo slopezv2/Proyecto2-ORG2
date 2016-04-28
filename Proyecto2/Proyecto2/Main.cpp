@@ -92,7 +92,8 @@ void sumar() {
 		MOV EAX,16
 		IMUL EAX,indexI
 		ADD EDX, EAX
-		FLD DWORD PTR[EDX]
+		MOV EAX, DWORD PTR[EDX]
+		PUSH EAX
 		LEA EDX, arrB
 		MOV EAX, 4
 		IMUL EAX, indexJ
@@ -100,8 +101,11 @@ void sumar() {
 		MOV EAX, 16
 		IMUL EAX, indexI
 		ADD EDX, EAX
-		FLD DWORD PTR[EDX]
-		FADD
+		MOV EAX, DWORD PTR[EDX]
+		PUSH EAX
+		CALL pSuma
+		POP EAX
+		POP EAX
 		LEA EDX, arrC
 		MOV EAX, 4
 		IMUL EAX, indexJ
@@ -120,38 +124,13 @@ void sumar() {
 	 }
 	imprimirMatriz(arrC);
 }
-float ejemploArr(){
-	float carr[4][4];
-	//float arr[3][3];
-	carr[0][0] = 2;
-	carr[1][0] = 5;
-	float result = 0;
-	float index = 1.8;
-	__asm {
-		lea edx, carr
-		; add edx, 16
-		FLD DWORD PTR[index]
-		FLD DWORD PTR[EDX]
-		FADD
-		FSTP DWORD PTR[result]
-	}
-	return result;
-}
-
 int main() {
 	int opcion = 0;
-	//iniciarMatriz('a', a);
-	//iniciarMatriz('b', b);
-	//imprimirMatriz(a);
-	//imprimirMatriz(b);
 	imprimir: imprimirMenu();
 	cin >> opcion;
 	switch (opcion) {
 	case 1:
-
-
 		sumar();
-		//ejemploArr(c);
 	break;
 	case 2:
 
