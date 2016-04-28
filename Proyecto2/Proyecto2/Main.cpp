@@ -15,8 +15,8 @@ float pSuma(float numA, float numB) {
 float pResta(float numA, float numB) {
 	float resultado = 0;
 	_asm {
-		FLD DWORD PTR[numA]
 		FLD DWORD PTR[numB]
+		FLD DWORD PTR[numA]
 		FSUB
 		FSTP DWORD PTR[resultado]
 	}
@@ -81,8 +81,6 @@ void sumar() {
 	iniciarMatriz('a', arrA);
 	iniciarMatriz('b', arrB);
 	int indexI = 0, indexJ = 0;
-	//imprimirMatriz(a);
-	//imprimirMatriz(b);
 	_asm {
 		SALTO_J:
 		LEA EDX, arrA
@@ -124,6 +122,55 @@ void sumar() {
 	 }
 	imprimirMatriz(arrC);
 }
+void restar() {
+	float arrA[4][4];
+	float arrB[4][4];
+	float arrC[4][4];
+	iniciarMatriz('a', arrA);
+	iniciarMatriz('b', arrB);
+	int indexI = 0, indexJ = 0;
+	_asm {
+	SALTO_J:
+		LEA EDX, arrA
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			MOV EAX, DWORD PTR[EDX]
+			PUSH EAX
+			LEA EDX, arrB
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			MOV EAX, DWORD PTR[EDX]
+			PUSH EAX
+			CALL pResta
+			POP EAX
+			POP EAX
+			LEA EDX, arrC
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			FSTP DWORD PTR[EDX]
+			INC indexJ
+			CMP indexJ, 3
+			JLE SALTO_J
+			MOV indexJ, 0
+			INC indexI
+			CMP indexI, 3
+			JLE SALTO_J
+	}
+	imprimirMatriz(arrC);
+}
+
 int main() {
 	int opcion = 0;
 	imprimir: imprimirMenu();
@@ -133,7 +180,7 @@ int main() {
 		sumar();
 	break;
 	case 2:
-
+		restar();
 	break;
 	case 3:
 
@@ -149,6 +196,6 @@ int main() {
 	}
 	//cout  << endl<< "Suma de 1 y 2" << suma(1, 2) << endl;
 	//cout << ejemploArr(c) << endl;
-	_getch();
+	goto imprimir;
 	salir: return 0;
 }
