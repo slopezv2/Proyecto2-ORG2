@@ -1,9 +1,7 @@
 #include <iostream>
 #include<conio.h>
 using namespace std;
-float a[4][4];
-float b[4][4];
-float c[4][4];	
+	
 float pSuma(float numA, float numB) {
 	float resultado = 0;
 	_asm {
@@ -44,22 +42,6 @@ float pDivision(float numA, float numB) {
 	}
 	return resultado;
 }
-float ejemploArr() {
-	float arr[3][3];
-	arr[1][2] = 2;
-	arr[1][1] = 5;
-	float result=0;
-	float index = 1.8;
-	__asm {
-		lea eax,arr
-		add eax,16
-		FLD DWORD PTR[index]
-		FLD DWORD PTR[EAX]
-		FADD
-		FSTP DWORD PTR[result]
-	}
-	return result;
-}
 void imprimirMatriz(float matriz[4][4]) {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -85,19 +67,109 @@ void iniciarMatriz(char letra, float matriz[4][4]) {
 }
 void imprimirMenu() {
 	cout << "Ingrese la operacion a ejecutar entre la matriz a y la matriz b" << endl;
-	cout << "Luego de eso se va a imprimir el resultado, excepto para la opcion salida" << endl;
+	cout << "Luego de eso se va a pedir la entrada de las matrices, excepto para la opcion salida" << endl;
 	cout << "1. Suma" << endl;
 	cout << "2. Resta" << endl;
 	cout << "3. Multiplicacion" << endl;
-	//TODO
+	cout << "4. Division" << endl;
+	cout << "5. Salir" << endl;
 }
+void sumar() {
+	float arrA[4][4];
+	float arrB[4][4];
+	float arrC[4][4];
+	iniciarMatriz('a', arrA);
+	iniciarMatriz('b', arrB);
+	int indexI = 0, indexJ = 0;
+	//imprimirMatriz(a);
+	//imprimirMatriz(b);
+	_asm {
+		SALTO_J:
+		LEA EDX, arrA
+		MOV EAX,4
+		IMUL EAX,indexJ
+		ADD EDX,EAX
+		MOV EAX,16
+		IMUL EAX,indexI
+		ADD EDX, EAX
+		FLD DWORD PTR[EDX]
+		LEA EDX, arrB
+		MOV EAX, 4
+		IMUL EAX, indexJ
+		ADD EDX, EAX
+		MOV EAX, 16
+		IMUL EAX, indexI
+		ADD EDX, EAX
+		FLD DWORD PTR[EDX]
+		FADD
+		LEA EDX, arrC
+		MOV EAX, 4
+		IMUL EAX, indexJ
+		ADD EDX, EAX
+		MOV EAX, 16
+		IMUL EAX, indexI
+		ADD EDX, EAX
+		FSTP DWORD PTR[EDX]
+		INC indexJ
+		CMP indexJ,3
+		JLE SALTO_J
+		MOV indexJ,0
+		INC indexI
+		CMP indexI, 3
+		JLE SALTO_J
+	 }
+	imprimirMatriz(arrC);
+}
+float ejemploArr(){
+	float carr[4][4];
+	//float arr[3][3];
+	carr[0][0] = 2;
+	carr[1][0] = 5;
+	float result = 0;
+	float index = 1.8;
+	__asm {
+		lea edx, carr
+		; add edx, 16
+		FLD DWORD PTR[index]
+		FLD DWORD PTR[EDX]
+		FADD
+		FSTP DWORD PTR[result]
+	}
+	return result;
+}
+
 int main() {
-	iniciarMatriz('a', a);
-	iniciarMatriz('b', b);
-	imprimirMatriz(a);
-	imprimirMatriz(b);
+	int opcion = 0;
+	//iniciarMatriz('a', a);
+	//iniciarMatriz('b', b);
+	//imprimirMatriz(a);
+	//imprimirMatriz(b);
+	imprimir: imprimirMenu();
+	cin >> opcion;
+	switch (opcion) {
+	case 1:
+
+
+		sumar();
+		//ejemploArr(c);
+	break;
+	case 2:
+
+	break;
+	case 3:
+
+	break;
+	case 4:
+
+	break;
+	case 5:
+		goto salir;
+		break;
+	default:
+		goto imprimir;
+	}
 	//cout  << endl<< "Suma de 1 y 2" << suma(1, 2) << endl;
-	cout << pDivision(4.3,8) << endl;
+	//cout << ejemploArr(c) << endl;
 	_getch();
-	return 0;
+	salir: return 0;
 }
