@@ -24,6 +24,7 @@ float pResta(float numA, float numB) {
 }
 float pMultiplicacion(float numA, float numB) {
 	float resultado = 0;
+	
 	_asm {
 		FLD DWORD PTR[numA]
 		FLD DWORD PTR[numB]
@@ -34,12 +35,18 @@ float pMultiplicacion(float numA, float numB) {
 }
 float pDivision(float numA, float numB) {
 	float resultado = 0;
+	if (numA == 0) {
+		cout << "Error: Division por 0 detectada, retornando -1 en el arreglo"<<endl;
+		resultado = -1;
+		goto error_sal;
+	}
 	_asm {
-		FLD DWORD PTR[numA]
 		FLD DWORD PTR[numB]
+		FLD DWORD PTR[numA]
 		FDIV
 		FSTP DWORD PTR[resultado]
 	}
+	error_sal:
 	return resultado;
 }
 void imprimirMatriz(float matriz[4][4]) {
@@ -170,7 +177,102 @@ void restar() {
 	}
 	imprimirMatriz(arrC);
 }
-
+void multiplicar() {
+	float arrA[4][4];
+	float arrB[4][4];
+	float arrC[4][4];
+	iniciarMatriz('a', arrA);
+	iniciarMatriz('b', arrB);
+	int indexI = 0, indexJ = 0;
+	_asm {
+	SALTO_J:
+		LEA EDX, arrA
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			MOV EAX, DWORD PTR[EDX]
+			PUSH EAX
+			LEA EDX, arrB
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			MOV EAX, DWORD PTR[EDX]
+			PUSH EAX
+			CALL pMultiplicacion
+			POP EAX
+			POP EAX
+			LEA EDX, arrC
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			FSTP DWORD PTR[EDX]
+			INC indexJ
+			CMP indexJ, 3
+			JLE SALTO_J
+			MOV indexJ, 0
+			INC indexI
+			CMP indexI, 3
+			JLE SALTO_J
+	}
+	imprimirMatriz(arrC);
+}
+void dividir() {
+	float arrA[4][4];
+	float arrB[4][4];
+	float arrC[4][4];
+	iniciarMatriz('a', arrA);
+	iniciarMatriz('b', arrB);
+	int indexI = 0, indexJ = 0;
+	_asm {
+	SALTO_J:
+		LEA EDX, arrA
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			MOV EAX, DWORD PTR[EDX]
+			PUSH EAX
+			LEA EDX, arrB
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			MOV EAX, DWORD PTR[EDX]
+			PUSH EAX
+			CALL pDivision
+			POP EAX
+			POP EAX
+			LEA EDX, arrC
+			MOV EAX, 4
+			IMUL EAX, indexJ
+			ADD EDX, EAX
+			MOV EAX, 16
+			IMUL EAX, indexI
+			ADD EDX, EAX
+			FSTP DWORD PTR[EDX]
+			INC indexJ
+			CMP indexJ, 3
+			JLE SALTO_J
+			MOV indexJ, 0
+			INC indexI
+			CMP indexI, 3
+			JLE SALTO_J
+	}
+	imprimirMatriz(arrC);
+}
 int main() {
 	int opcion = 0;
 	imprimir: imprimirMenu();
@@ -183,10 +285,10 @@ int main() {
 		restar();
 	break;
 	case 3:
-
+		multiplicar();
 	break;
 	case 4:
-
+		dividir();
 	break;
 	case 5:
 		goto salir;
